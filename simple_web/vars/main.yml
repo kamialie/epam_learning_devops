@@ -1,0 +1,4 @@
+---
+web_root: /var/www
+web_file: index.html
+color: red

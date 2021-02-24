@@ -1,0 +1,28 @@
+---
+- name: "install Nginx"
+  package:
+    name: nginx
+    state: installed
+- name: "copy over nginx.conf"
+  template:
+    src: templates/nginx.j2
+    dest: "etc/nginx/nginx.conf"
+    mode: "0644"
+- name: "create www dir"
+  file:
+    path: "{{ web_root }}"
+    state: directory
+    owner: nginx
+    group: nginx
+- name: "copy over index.html"
+  template:
+    src: templates/index.j2
+    dest: "{{ web_root }}/{{ web_file }}"
+    owner: nginx
+    group: nginx
+    mode: "0644"
+- name: "start and enable Nginx"
+  service:
+    name: nginx
+    state: restarted
+    enabled: yes
