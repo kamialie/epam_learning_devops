@@ -3,9 +3,14 @@ variable "region" {
   default = "eu-central-1"
 }
 
-variable "ubuntu_18_04_free" {
+variable "ubuntu_20_04_free" {
   type    = string
-  default = "ami-0d971d62e4d019dcc"
+  default = "ami-0093cac2bf998a669"
+}
+
+variable "rhel_8_free" {
+  type    = string
+  default = "ami-009b16df9fcaac611"
 }
 
 variable "ssh_key" {

@@ -1,2 +1,13 @@
 # python venv
 my_env
+
+# terraform
+.terraform.lock.hcl
+.terraform
+terraform*
+
+# ssh
+epam_learning.pem
+
+# dynamic inventory
+inventory

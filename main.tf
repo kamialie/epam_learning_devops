@@ -63,6 +63,13 @@ resource "aws_security_group" "main" {
   }
 
   ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
     from_port   = 8
     to_port     = -1
     protocol    = "icmp"
@@ -82,7 +89,7 @@ resource "aws_security_group" "main" {
 }
 
 resource "aws_instance" "server" {
-  ami                         = var.ubuntu_18_04_free
+  ami                         = var.ubuntu_20_04_free
   associate_public_ip_address = true
   instance_type               = "t2.micro"
   key_name                    = var.ssh_key
@@ -93,8 +100,4 @@ resource "aws_instance" "server" {
     Name      = "server"
     Terraform = true
   }
-}
-
-output "server-IPs" {
-  value = aws_instance.server.public_ip
 }

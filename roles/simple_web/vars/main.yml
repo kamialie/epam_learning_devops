@@ -1,4 +1,6 @@
 ---
+nginx_user: www-data
+nginx_group: www-data
 web_root: /var/www
 web_file: index.html
 color: red
