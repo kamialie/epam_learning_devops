@@ -24,6 +24,7 @@ pipeline {
 		stage ('Molecule test') {
 			steps {
 				sh '''
+				cd roles/simple_web
 				source $HOME/my_env/bin/activate
 				molecule converge
 				'''
