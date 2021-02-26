@@ -23,13 +23,33 @@ pipeline {
 				'''
 			}
 		}
-
-		stage ('Molecule test') {
+		stage ('Molecule converge') {
 			steps {
+				dir("roles/simple_web") {
+					sh '''
+					source $HOME/my_env/bin/activate
+					molecule converge
+					'''
+				}
+			}
+		}
+		stage ('Molecule verify') {
+			steps {
+				dir("roles/simple_web") {
+					sh '''
+					source $HOME/my_env/bin/activate
+					molecule verify
+					'''
+				}
+			}
+		}
+	}
+	post {
+		always {
+			dir("roles/simple_web") {
 				sh '''
-				cd roles/simple_web
 				source $HOME/my_env/bin/activate
-				molecule converge
+				molecule destroy
 				'''
 			}
 		}
