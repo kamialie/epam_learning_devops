@@ -3,6 +3,9 @@ pipeline {
 	environment {
 		PATH = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 	}
+	options {
+		ansiColor('xterm')
+	}
 	stages {
 		stage ("Test") {
 			steps {
