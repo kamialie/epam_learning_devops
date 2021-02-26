@@ -5,6 +5,7 @@ my_env
 .terraform.lock.hcl
 .terraform
 terraform*
+!terraform.tfstate
 
 # ssh
 epam_learning.pem
