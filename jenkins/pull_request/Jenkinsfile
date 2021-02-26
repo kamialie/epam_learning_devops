@@ -10,7 +10,6 @@ pipeline {
 		stage ('Display versions') {
 			steps {
 				sh '''
-				source $HOME/my_env/bin/activate
 				docker -v
 				python -V
 				ansible --version
