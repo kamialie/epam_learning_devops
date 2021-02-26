@@ -7,11 +7,6 @@ pipeline {
 		ansiColor('xterm')
 	}
 	stages {
-		stage ("Test") {
-			steps {
-				echo "test"
-			}
-		}
 		stage ('Display versions') {
 			steps {
 				sh '''
@@ -23,7 +18,7 @@ pipeline {
 				'''
 			}
 		}
-		stage ('Molecule converge') {
+		/*stage ('Molecule converge') {
 			steps {
 				dir("roles/simple_web") {
 					sh '''
@@ -42,16 +37,36 @@ pipeline {
 					'''
 				}
 			}
-		}
+		}*/
 	}
 	post {
-		always {
+		/*always {
 			dir("roles/simple_web") {
 				sh '''
 				source $HOME/my_env/bin/activate
 				molecule destroy
 				'''
 			}
+    }*/
+    sucess {
+      script {
+        setBuildStatus("Succeeded", "SUCCESS")
+      }
+		}
+    failure {
+      script {
+        setBuildStatus("Succeeded", "FAILURE")
+      }
 		}
 	}
+}
+
+void  setBuildStatus(String message, String state) {
+  step([
+      $class: "GitHubCommitStatusSetter",
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/wise-Kaas/epam_learning_devops"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "feature"],
+      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+  ]);
 }
