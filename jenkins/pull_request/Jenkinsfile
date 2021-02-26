@@ -6,5 +6,25 @@ pipeline {
 				echo "test"
 			}
 		}
+		stage ('Display versions') {
+			steps {
+				sh '''
+				source $HOME/my_env/bin/activate
+				docker -v
+				python -V
+				ansible --version
+				molecule --version
+				'''
+			}
+		}
+
+		stage ('Molecule test') {
+			steps {
+				sh '''
+				source virtenv/bin/activate
+				molecule test
+				'''
+			}
+		}
 	}
 }
