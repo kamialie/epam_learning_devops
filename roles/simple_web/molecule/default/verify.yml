@@ -30,7 +30,7 @@
         - remote_file.stat.isreg
         - remote_file.stat.mode == "0644"
   - name: Nginx - test nginx.conf content
-    shell: "head -n 1 {{ conf_file_path }} | grep custom"
+    shell: "head -n 1 {{ conf_file_path }} | grep kustom"
     changed_when: false
   - name: "Web - test {{ web_file }}"
     stat:
