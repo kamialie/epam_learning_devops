@@ -24,8 +24,8 @@ pipeline {
 		stage ('Molecule test') {
 			steps {
 				sh '''
-				source virtenv/bin/activate
-				molecule test
+				source $HOME/my_env/bin/activate
+				molecule converge
 				'''
 			}
 		}
