@@ -2,10 +2,10 @@
 my_env
 
 # terraform
-.terraform.lock.hcl
-.terraform
-terraform*
-!terraform.tfstate
+**/.terraform/*
+
+*.tfstate
+*.tfstate.*
 
 # ssh
 epam_learning.pem

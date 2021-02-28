@@ -5,7 +5,8 @@ variable "region" {
 
 variable "ubuntu_20_04_free" {
   type    = string
-  default = "ami-0093cac2bf998a669"
+  default = "ami-0932440befd74cdba"
+  #default = "ami-0093cac2bf998a669"
 }
 
 variable "rhel_8_free" {
@@ -16,4 +17,12 @@ variable "rhel_8_free" {
 variable "ssh_key" {
   type    = string
   default = "epam_learning"
+}
+
+variable "tags" {
+  type = map(string)
+  default = {
+    Project   = "epam-learning-devops"
+    Terraform = "true"
+  }
 }

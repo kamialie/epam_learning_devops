@@ -2,6 +2,7 @@ pipeline {
 	agent any
 	environment {
 		PATH = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+		VIRTUAL_ENV = "/home/ubuntu/virtual_env"
 	}
 	options {
 		ansiColor('xterm')
@@ -9,8 +10,8 @@ pipeline {
 	stages {
 		stage ('Display versions') {
 			steps {
-				sh '''
-				source $HOME/my_env/bin/activate
+				sh '''#!/bin/bash
+				source $VIRTUAL_ENV/bin/activate
 				terraform --version
 				ansible --version
 				'''
@@ -18,11 +19,13 @@ pipeline {
 		}
 		stage ('Terraform init and plan') {
 			steps {
-				withCredentials([usernamePassword(credentialsId: 'aws_cred', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
-					sh '''
-					terraform init
-					terraform plan
-					'''
+				dir("terraform") {
+					withCredentials([usernamePassword(credentialsId: 'aws_cred', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+						sh '''
+						terraform init
+						terraform plan
+						'''
+					}
 				}
 			}
 		}
@@ -41,10 +44,12 @@ pipeline {
 				environment name: 'TERRAFORM_APPLY', value: 'true'
 			}
 			steps {
-				withCredentials([usernamePassword(credentialsId: 'aws_cred', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
-					sh '''
-					terraform apply -auto-approve
-					'''
+				dir("terraform") {
+					withCredentials([usernamePassword(credentialsId: 'aws_cred', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+						sh '''
+						terraform apply -auto-approve
+						'''
+					}
 				}
 			}
 		}
@@ -53,12 +58,14 @@ pipeline {
 				environment name: 'TERRAFORM_APPLY', value: 'true'
 			}
 			steps {
-				withCredentials([sshUserPrivateKey(credentialsId: 'web_server_ssh', keyFileVariable: 'SSH_KEY_PATH', passphraseVariable: '', usernameVariable: '')]) {
-					sh '''
-					source $HOME/my_env/bin/activate
-					cp $SSH_KEY_PATH epam_learning.pem
-					ansible-playbook -i inventory web_server.yml
-					'''
+				dir("ansible") {
+					withCredentials([sshUserPrivateKey(credentialsId: 'web_server_ssh', keyFileVariable: 'SSH_KEY_PATH', passphraseVariable: '', usernameVariable: '')]) {
+						sh '''#!/bin/bash
+						source $VIRTUAL_ENV/bin/activate
+						cp $SSH_KEY_PATH epam_learning.pem
+						ansible-playbook -i inventory web_server.yml
+						'''
+					}
 				}
 			}
 		}

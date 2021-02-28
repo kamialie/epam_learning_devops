@@ -2,6 +2,7 @@ pipeline {
 	agent any
 	environment {
 		PATH = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+		VIRTUAL_ENV = "/home/ubuntu/virtual_env"
 	}
 	options {
 		ansiColor('xterm')
@@ -9,8 +10,9 @@ pipeline {
 	stages {
 		stage ('Display versions') {
 			steps {
-				sh '''
-				source $HOME/my_env/bin/activate
+				sh "env"
+				sh '''#!/bin/bash
+				source $VIRTUAL_ENV/bin/activate
 				docker -v
 				python -V
 				ansible --version
@@ -20,9 +22,9 @@ pipeline {
 		}
 		stage ('Molecule converge') {
 			steps {
-				dir("roles/simple_web") {
-					sh '''
-					source $HOME/my_env/bin/activate
+				dir("ansible/roles/simple_web") {
+					sh '''#!/bin/bash
+					source $VIRTUAL_ENV/bin/activate
 					molecule converge
 					'''
 				}
@@ -30,9 +32,9 @@ pipeline {
 		}
 		stage ('Molecule verify') {
 			steps {
-				dir("roles/simple_web") {
-					sh '''
-					source $HOME/my_env/bin/activate
+				dir("ansible/roles/simple_web") {
+					sh '''#!/bin/bash
+					source $VIRTUAL_ENV/bin/activate
 					molecule verify
 					'''
 				}
@@ -41,22 +43,22 @@ pipeline {
 	}
 	post {
 		always {
-			dir("roles/simple_web") {
-				sh '''
-				source $HOME/my_env/bin/activate
+			dir("ansible/roles/simple_web") {
+				sh '''#!/bin/bash
+				source $VIRTUAL_ENV/bin/activate
 				molecule destroy
 				'''
 			}
-    }
-    success {
-      script {
-        setBuildStatus("Succeeded", "SUCCESS")
-      }
 		}
-    failure {
-      script {
-        setBuildStatus("Succeeded", "FAILURE")
-      }
+		success {
+			script {
+				setBuildStatus("Succeeded", "SUCCESS")
+			}
+		}
+		failure {
+			script {
+				setBuildStatus("Succeeded", "FAILURE")
+			}
 		}
 	}
 }
