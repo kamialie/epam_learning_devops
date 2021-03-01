@@ -49,6 +49,7 @@ pipeline {
 				molecule destroy
 				'''
 			}
+      cleanWs()
 		}
 		success {
 			script {

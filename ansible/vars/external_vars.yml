@@ -35,4 +35,3 @@ jenkins_plugins:
   - github
   - workflow-aggregator
   - ws-cleanup
-jenkins_http_port: 80
