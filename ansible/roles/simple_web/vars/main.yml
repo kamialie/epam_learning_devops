@@ -5,4 +5,4 @@ cent_nginx_user: nginx
 cent_nginx_group: nginx
 web_root: /var/www
 web_file: index.html
-color: red
+color: green
